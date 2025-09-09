@@ -1,0 +1,13 @@
+
+# !.vscode/*
+
+# Arquivos do VS Code
+.vscode/
+
+# Arquivos de build do CMake
+build/
+*/build/
+*.cbuild/
+
+# Arquivos do Pico SDK
+pico_sdk_import.cmake
