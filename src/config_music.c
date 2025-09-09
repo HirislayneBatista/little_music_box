@@ -1,4 +1,5 @@
 #include "config_music.h"
+#include "musical_scores.h"
 #include "led_button.h"
 #include "buzzer.h"
 #include <stdio.h>
@@ -8,6 +9,18 @@ Nota* musicas[] = {parabens, twinkle};
 size_t num_notas_musicas[] = {NUM_NOTAS_PARABENS, NUM_NOTAS_TWINKLE};
 const char* nomes_musicas[] = {"Parabens", "Twinkle"};
 
+// Função para obter a música selecionada baseada no estado
+int get_musica_selecionada(void) {
+    switch(estado_atual) {
+        case ESTADO_TOCANDO_PARABENS:
+            return 0;
+        case ESTADO_TOCANDO_TWINKLE:
+            return 1;
+        default:
+            return -1;
+    }
+}
+
 void tocar_nota(uint frequencia, uint duracao_ms) {
     if (frequencia == PAUSA) {
         buzzer_stop(BUZZER_PIN);
@@ -15,7 +28,6 @@ void tocar_nota(uint frequencia, uint duracao_ms) {
         return;
     }
     
-    // Toca a nota usando a função buzzer_beep
     buzzer_beep(BUZZER_PIN, frequencia, duracao_ms);
 }
 
@@ -31,6 +43,7 @@ void tocar_musica(Nota *musica, size_t num_notas) {
         if (stop_requested) {
             printf("Reprodução interrompida\n");
             buzzer_stop(BUZZER_PIN);
+            estado_atual = ESTADO_PARADO;
             return;
         }
         
@@ -40,11 +53,10 @@ void tocar_musica(Nota *musica, size_t num_notas) {
             silencio(musica[i].duracao);
         }
         
-        // Pequena pausa entre notas
-        silencio(30);
+        silencio(30);  // Pequena pausa entre notas
     }
     
-    // Silêncio no final
-    silencio(300);
+    silencio(300); // Silentio final para separar execuções
     printf("Reprodução concluída\n");
+    estado_atual = ESTADO_PARADO;
 }

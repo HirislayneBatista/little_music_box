@@ -22,17 +22,19 @@ Data: 08-09-2025
 int main() {
     // Inicializações
     stdio_init_all();
+    while (!stdio_usb_connected()) {
+        sleep_ms(100);
+    }
+    
     init_gpio();              // LEDs e botões
     buzzer_init(BUZZER_PIN);  // Buzzer com PWM
 
-    printf("=== Caixinha Musical BitDogLab ===\n");
-    printf("Botao A (GPIO %d): Toca Parabéns\n", BOTAO_A);
-    printf("Botao B (GPIO %d): Toca Twinkle\n", BOTAO_B);
-    printf("Buzzer: GPIO %d\n", BUZZER_PIN);
-    printf("Musica atual: %s\n", nomes_musicas[musica_selecionada]);
+    printf("\n=== Caixinha Musical BitDogLab ===\n");
+    printf("Botão A: Play/Pause Parabéns\n");
+    printf("Botão B: Play/Pause Twinkle\n");
 
     // LED azul indicando pronto
-    set_led_color(0, 0, 1);
+    set_led_estado(ESTADO_PARADO);
 
     // Beep de inicialização
     buzzer_beep(BUZZER_PIN, 1000, 100);
@@ -41,19 +43,21 @@ int main() {
 
     while (true) {
         if (playing && !stop_requested) {
-            printf("Tocando: %s\n", nomes_musicas[musica_selecionada]);
-            
-            // LED verde durante reprodução
-            set_led_color(0, 1, 0);
-            piscar_led(LED_VERDE, 2, 100);
-            
-            tocar_musica(musicas[musica_selecionada], num_notas_musicas[musica_selecionada]);
-            
-            playing = false;
-            
-            // Volta para LED azul
-            set_led_color(0, 0, 1);
-        }
+            int musica_idx = get_musica_selecionada();
+                if (musica_idx >= 0) {
+                    printf("Tocando: %s\n", nomes_musicas[musica_idx]);
+                    
+                    // Atualiza LED conforme a música
+                    set_led_estado(estado_atual);
+                    
+                    tocar_musica(musicas[musica_idx], num_notas_musicas[musica_idx]);
+                    
+                    playing = false;
+                    
+                    // Volta para estado parado
+                    set_led_estado(ESTADO_PARADO);
+                }
+            }
         
         // Pequena pausa para não sobrecarregar a CPU
         sleep_ms(100);

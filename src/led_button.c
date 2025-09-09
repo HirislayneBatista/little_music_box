@@ -4,7 +4,7 @@
 // Variáveis globais
 volatile bool playing = false;
 volatile bool stop_requested = false;
-volatile int musica_selecionada = 0;  // 0 = Parabéns, 1 = Twinkle
+volatile EstadoReproducao estado_atual = ESTADO_PARADO;
 
 // Inicializa o pino GPIO para o botão com pull-up
 void button_init(uint pin, uint direcao) {
@@ -38,21 +38,38 @@ void init_gpio(void) {
     printf("GPIOs inicializado para BitDogLab\n");
 }
 
+// Callback de interrupção para os botões
 void gpio_callback(uint gpio, uint32_t events) {
     if (events & GPIO_IRQ_EDGE_FALL) {
         switch(gpio) {
-            case BOTAO_A:  // Toca Parabéns
-                playing = true;
-                stop_requested = false;
-                musica_selecionada = 0;
-                printf("Botão A pressionado - Tocando Parabéns\n");
+            case BOTAO_A:  // Play/Pause Parabéns
+                if (estado_atual == ESTADO_TOCANDO_PARABENS) {
+                    // Se já está tocando Parabéns, para
+                    stop_requested = true;
+                    estado_atual = ESTADO_PARADO;
+                    printf("Parabéns pausado\n");
+                } else {
+                    // Se não está tocando ou está tocando outra música, inicia Parabéns
+                    playing = true;
+                    stop_requested = false;
+                    estado_atual = ESTADO_TOCANDO_PARABENS;
+                    printf("Tocando Parabéns\n");
+                }
                 break;
                 
-            case BOTAO_B:  // Toca Twinkle
-                playing = true;
-                stop_requested = false;
-                musica_selecionada = 1;
-                printf("Botão B pressionado - Tocando Twinkle\n");
+            case BOTAO_B:  // Play/Pause Twinkle
+                if (estado_atual == ESTADO_TOCANDO_TWINKLE) {
+                    // Se já está tocando Twinkle, para
+                    stop_requested = true;
+                    estado_atual = ESTADO_PARADO;
+                    printf("Twinkle pausado\n");
+                } else {
+                    // Se não está tocando ou está tocando outra música, inicia Twinkle
+                    playing = true;
+                    stop_requested = false;
+                    estado_atual = ESTADO_TOCANDO_TWINKLE;
+                    printf("Tocando Twinkle\n");
+                }
                 break;
         }
     }
@@ -71,6 +88,20 @@ void set_led_color(uint vermelho, uint verde, uint azul) {
     gpio_put(LED_VERMELHO, vermelho);
     gpio_put(LED_VERDE, verde);
     gpio_put(LED_AZUL, azul);
+}
+
+void set_led_estado(EstadoReproducao estado) {
+    switch(estado) {
+        case ESTADO_PARADO:
+            set_led_color(0, 0, 1);  // Azul - pronto
+            break;
+        case ESTADO_TOCANDO_PARABENS:
+            set_led_color(1, 0, 0);  // Vermelho - Parabéns
+            break;
+        case ESTADO_TOCANDO_TWINKLE:
+            set_led_color(0, 1, 0);  // Verde - Twinkle
+            break;
+    }
 }
 
 EstadoBotao ler_botao(uint gpio_pin) {
