@@ -5,16 +5,16 @@
 #include <stdio.h>
 
 // Array de músicas disponíveis
-Nota* musicas[] = {parabens, twinkle};
-size_t num_notas_musicas[] = {NUM_NOTAS_PARABENS, NUM_NOTAS_TWINKLE};
-const char* nomes_musicas[] = {"Parabens", "Twinkle"};
+Nota* musicas[] = {musica1, musica2};
+size_t num_notas_musicas[] = {NUM_NOTAS_MUSICA1, NUM_NOTAS_MUSICA2};
+const char* nomes_musicas[] = {"Musica 1", "Musica 2"};
 
 // Função para obter a música selecionada baseada no estado
 int get_musica_selecionada(void) {
     switch(estado_atual) {
-        case ESTADO_TOCANDO_PARABENS:
+        case ESTADO_TOCANDO_MUSICA1:
             return 0;
-        case ESTADO_TOCANDO_TWINKLE:
+        case ESTADO_TOCANDO_MUSICA2:
             return 1;
         default:
             return -1;

@@ -22,16 +22,16 @@ Data: 08-09-2025
 int main() {
     // Inicializações
     stdio_init_all();
-    while (!stdio_usb_connected()) {
-        sleep_ms(100);
-    }
+    // while (!stdio_usb_connected()) { // Retirar quando passar pra placa
+    //     sleep_ms(100);
+    // }
     
     init_gpio();              // LEDs e botões
     buzzer_init(BUZZER_PIN);  // Buzzer com PWM
 
     printf("\n=== Caixinha Musical BitDogLab ===\n");
-    printf("Botão A: Play/Pause Parabéns\n");
-    printf("Botão B: Play/Pause Twinkle\n");
+    printf("Botão A - Musica 1: Play/Pause Harry Potter Theme\n");
+    printf("Botão B - Musica 2: Play/Pause Super Mario Theme\n");
 
     // LED azul indicando pronto
     set_led_estado(ESTADO_PARADO);

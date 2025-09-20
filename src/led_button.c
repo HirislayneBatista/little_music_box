@@ -42,33 +42,31 @@ void init_gpio(void) {
 void gpio_callback(uint gpio, uint32_t events) {
     if (events & GPIO_IRQ_EDGE_FALL) {
         switch(gpio) {
-            case BOTAO_A:  // Play/Pause Parabéns
-                if (estado_atual == ESTADO_TOCANDO_PARABENS) {
-                    // Se já está tocando Parabéns, para
+            case BOTAO_A:  // Play/Pause MUSICA 1
+                if (estado_atual == ESTADO_TOCANDO_MUSICA1) {
+                    // Se já está tocando, para
                     stop_requested = true;
                     estado_atual = ESTADO_PARADO;
-                    printf("Parabéns pausado\n");
+                    printf("Musica 1 pausada\n");
                 } else {
-                    // Se não está tocando ou está tocando outra música, inicia Parabéns
+                    // Se não está tocando ou está tocando outra música, inicia musica
                     playing = true;
                     stop_requested = false;
-                    estado_atual = ESTADO_TOCANDO_PARABENS;
-                    printf("Tocando Parabéns\n");
+                    estado_atual = ESTADO_TOCANDO_MUSICA1;
+                    printf("Tocando Musica 1\n");
                 }
                 break;
                 
-            case BOTAO_B:  // Play/Pause Twinkle
-                if (estado_atual == ESTADO_TOCANDO_TWINKLE) {
-                    // Se já está tocando Twinkle, para
+            case BOTAO_B:  // Play/Pause MUSICA 2
+                if (estado_atual == ESTADO_TOCANDO_MUSICA2) {
                     stop_requested = true;
                     estado_atual = ESTADO_PARADO;
-                    printf("Twinkle pausado\n");
+                    printf("Musica 2 pausada\n");
                 } else {
-                    // Se não está tocando ou está tocando outra música, inicia Twinkle
                     playing = true;
                     stop_requested = false;
-                    estado_atual = ESTADO_TOCANDO_TWINKLE;
-                    printf("Tocando Twinkle\n");
+                    estado_atual = ESTADO_TOCANDO_MUSICA2;
+                    printf("Tocando Musica 2\n");
                 }
                 break;
         }
@@ -95,11 +93,11 @@ void set_led_estado(EstadoReproducao estado) {
         case ESTADO_PARADO:
             set_led_color(0, 0, 1);  // Azul - pronto
             break;
-        case ESTADO_TOCANDO_PARABENS:
-            set_led_color(1, 0, 0);  // Vermelho - Parabéns
+        case ESTADO_TOCANDO_MUSICA1:
+            set_led_color(1, 0, 0);  // Vermelho - Musica 1
             break;
-        case ESTADO_TOCANDO_TWINKLE:
-            set_led_color(0, 1, 0);  // Verde - Twinkle
+        case ESTADO_TOCANDO_MUSICA2:
+            set_led_color(0, 1, 0);  // Verde - Musica 2
             break;
     }
 }

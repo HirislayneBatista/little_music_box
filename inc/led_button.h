@@ -16,8 +16,8 @@
 // Estados de reprodução
 typedef enum {
     ESTADO_PARADO,
-    ESTADO_TOCANDO_PARABENS,
-    ESTADO_TOCANDO_TWINKLE
+    ESTADO_TOCANDO_MUSICA1,
+    ESTADO_TOCANDO_MUSICA2
 } EstadoReproducao;
 
 // Estados dos botões
